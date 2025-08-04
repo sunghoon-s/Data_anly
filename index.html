@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간단한 웹페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        p {
+            line-height: 1.6;
+            color: #666;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>안녕하세요! 👋</h1>
+        <p>이것은 간단한 HTML 페이지입니다.</p>
+        <p>여기에 원하는 내용을 추가할 수 있습니다.</p>
+        
+        <h2>기능</h2>
+        <ul>
+            <li>반응형 디자인</li>
+            <li>깔끔한 스타일링</li>
+            <li>사용하기 쉬운 구조</li>
+        </ul>
+        
+        <button class="button" onclick="alert('버튼이 클릭되었습니다!')">클릭해보세요</button>
+    </div>
+
+    <script>
+        console.log('페이지가 로드되었습니다!');
+        
+        // 간단한 인터랙션 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.querySelector('.button');
+            button.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
