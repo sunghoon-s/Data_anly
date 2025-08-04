@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "Google Sheets Data System",
+    "version": "1.0.0",
+    "description": "구글 시트 데이터 관리 시스템"
+  },
+  "api": {
+    "googleSheets": {
+      "baseUrl": "https://sheets.googleapis.com/v4/spreadsheets",
+      "defaultRange": "Sheet1!A1:Z1000",
+      "timeout": 10000
+    }
+  },
+  "ui": {
+    "theme": "default",
+    "language": "ko",
+    "tablePageSize": 50,
+    "enableAnimations": true
+  },
+  "security": {
+    "enableCORS": true,
+    "allowedOrigins": ["*"],
+    "rateLimitEnabled": false
+  },
+  "features": {
+    "autoSave": true,
+    "exportFormats": ["csv", "json", "xlsx"],
+    "realTimeUpdates": false
+  }
+}

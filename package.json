@@ -1,0 +1,27 @@
+{
+  "name": "google-sheets-data-system",
+  "version": "1.0.0",
+  "description": "구글 시트 데이터를 읽고 쓰는 웹 기반 시스템",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx http-server -p 8080",
+    "preview": "start index.html"
+  },
+  "keywords": [
+    "google-sheets",
+    "google-apps-script",
+    "data-management",
+    "web-app",
+    "api"
+  ],
+  "author": "Data Analysis Team",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunghoon-s/Data_anly.git"
+  },
+  "homepage": "https://github.com/sunghoon-s/Data_anly#readme"
+}

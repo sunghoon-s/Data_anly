@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 시트 데이터 뷰어</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+        }
+        
+        .result-section {
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-size: 1.2rem;
+        }
+        
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #f5c6cb;
+            margin: 20px 0;
+        }
+        
+        .error h4 {
+            margin-bottom: 10px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #c3e6cb;
+            margin: 20px 0;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .data-table th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .data-table tr:hover {
+            background: #e3f2fd;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .info-box h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+            background: #f8f9fa;
+            margin-top: 40px;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 구글 시트 데이터 뷰어</h1>
+            <p>Google Sheets API를 사용하여 데이터를 실시간으로 불러옵니다</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <h3>🔑 API 설정</h3>
+                
+                <div class="form-group">
+                    <label for="apiKey">Google API 키</label>
+                    <input type="password" id="apiKey" placeholder="Google Cloud Console에서 생성한 API 키를 입력하세요">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sheetId">구글 시트 ID</label>
+                    <input type="text" id="sheetId" placeholder="구글 시트 URL에서 추출한 ID를 입력하세요">
+                </div>
+                
+                <div class="form-group">
+                    <label for="range">데이터 범위</label>
+                    <input type="text" id="range" value="Sheet1!A1:Z1000" placeholder="예: Sheet1!A1:E10">
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="loadData()">📥 데이터 불러오기</button>
+                    <button class="btn btn-secondary" onclick="showExample()">🎯 예시 데이터</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h4>💡 사용 방법</h4>
+                <ol>
+                    <li><strong>Google Cloud Console</strong>에서 프로젝트 생성 및 Google Sheets API 활성화</li>
+                    <li><strong>API 키</strong> 생성 (사용자 인증 정보 → API 키)</li>
+                    <li><strong>구글 시트</strong>를 "링크가 있는 모든 사용자" 읽기 권한으로 공유</li>
+                    <li><strong>시트 ID</strong>는 URL에서 추출: <code>docs.google.com/spreadsheets/d/[SHEET_ID]/edit</code></li>
+                    <li>위 정보를 입력하고 "데이터 불러오기" 클릭</li>
+                </ol>
+            </div>
+            
+            <div id="result" class="result-section" style="display: none;">
+                <!-- 결과가 여기에 표시됩니다 -->
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🚀 Google Sheets Data Viewer | Made with ❤️</p>
+            <p><a href="https://github.com/sunghoon-s/Data_anly" target="_blank" style="color: #667eea;">GitHub Repository</a></p>
+        </div>
+    </div>
+
+    <script>
+        // 데이터 불러오기 함수
+        async function loadData() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const sheetId = document.getElementById('sheetId').value.trim();
+            const range = document.getElementById('range').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            // 입력값 검증
+            if (!apiKey || !sheetId || !range) {
+                showError('모든 필드를 입력해주세요.');
+                return;
+            }
+            
+            // 결과 영역 표시 및 로딩 상태
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    데이터를 불러오는 중입니다...
+                </div>
+            `;
+            
+            try {
+                // Google Sheets API 호출
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`HTTP ${response.status}: ${errorData.error?.message || response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.values || data.values.length === 0) {
+                    showError('시트에 데이터가 없거나 지정된 범위에 데이터가 없습니다.');
+                    return;
+                }
+                
+                // 성공적으로 데이터를 불러온 경우
+                displayData(data.values);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError(`데이터를 불러오는 중 오류가 발생했습니다: ${error.message}`);
+            }
+        }
+        
+        // 데이터 표시 함수
+        function displayData(values) {
+            const resultDiv = document.getElementById('result');
+            
+            let html = `
+                <div class="success">
+                    <h4>✅ 성공!</h4>
+                    <p>총 ${values.length}행의 데이터를 불러왔습니다.</p>
+                </div>
+                
+                <table class="data-table">
+            `;
+            
+            // 테이블 헤더
+            if (values.length > 0) {
+                html += '<thead><tr>';
+                values[0].forEach(cell => {
+                    html += `<th>${cell || ''}</th>`;
+                });
+                html += '</tr></thead>';
+            }
+            
+            // 테이블 본문
+            html += '<tbody>';
+            for (let i = 1; i < values.length; i++) {
+                html += '<tr>';
+                values[i].forEach(cell => {
+                    html += `<td>${cell || ''}</td>`;
+                });
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            
+            // 추가 정보
+            html += `
+                <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px; text-align: center;">
+                    <p style="color: #666;">📈 데이터 로드 완료 | ${new Date().toLocaleString()}</p>
+                </div>
+            `;
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        // 오류 표시 함수
+        function showError(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="error">
+                    <h4>❌ 오류</h4>
+                    <p>${message}</p>
+                    <hr style="margin: 15px 0;">
+                    <h5>확인사항:</h5>
+                    <ul>
+                        <li>API 키가 올바른지 확인</li>
+                        <li>Google Sheets API가 활성화되어 있는지 확인</li>
+                        <li>시트 ID가 올바른지 확인</li>
+                        <li>시트가 공개로 설정되어 있는지 확인</li>
+                        <li>데이터 범위가 올바른지 확인</li>
+                    </ul>
+                </div>
+            `;
+        }
+        
+        // 예시 데이터 표시 함수
+        function showExample() {
+            const exampleData = [
+                ['이름', '나이', '직업', '도시', '급여'],
+                ['김철수', '25', '개발자', '서울', '5,000'],
+                ['이영희', '30', '디자이너', '부산', '4,500'],
+                ['박민수', '28', '기획자', '대구', '4,000'],
+                ['정수진', '32', '마케터', '인천', '4,800'],
+                ['최영수', '27', '개발자', '서울', '5,200']
+            ];
+            
+            document.getElementById('result').style.display = 'block';
+            displayData(exampleData);
+        }
+        
+        // 엔터 키 지원
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loadData();
+            }
+        });
+        
+        // 페이지 로드 시 환영 메시지
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 구글 시트 데이터 뷰어가 로드되었습니다!');
+            console.log('📚 사용법: https://github.com/sunghoon-s/Data_anly');
+        });
+    </script>
+</body>
+</html>

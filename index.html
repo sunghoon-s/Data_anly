@@ -3,71 +3,549 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>간단한 웹페이지</title>
+    <title>구글 시트 & 앱스크립트 데이터 시스템</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
         .container {
             background-color: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
         }
         h1 {
             color: #333;
             text-align: center;
+            margin-bottom: 10px;
         }
-        p {
-            line-height: 1.6;
+        .subtitle {
+            text-align: center;
             color: #666;
+            margin-bottom: 30px;
+        }
+        .method-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
         }
         .button {
-            background-color: #007bff;
+            background: linear-gradient(45deg, #007bff, #0056b3);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
         }
         .button:hover {
-            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.4);
+        }
+        .button.secondary {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+        .button.danger {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+        .error {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .loading {
+            text-align: center;
+            color: #6c757d;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>안녕하세요! 👋</h1>
-        <p>이것은 간단한 HTML 페이지입니다.</p>
-        <p>여기에 원하는 내용을 추가할 수 있습니다.</p>
+        <h1>🚀 구글 시트 & 앱스크립트 데이터 시스템</h1>
+        <p class="subtitle">구글 시트 데이터를 다양한 방법으로 읽고 쓸 수 있습니다</p>
         
-        <h2>기능</h2>
-        <ul>
-            <li>반응형 디자인</li>
-            <li>깔끔한 스타일링</li>
-            <li>사용하기 쉬운 구조</li>
-        </ul>
-        
-        <button class="button" onclick="alert('버튼이 클릭되었습니다!')">클릭해보세요</button>
+        <div class="method-tabs">
+            <button class="tab active" onclick="switchTab('api')">API 방식</button>
+            <button class="tab" onclick="switchTab('script')">앱스크립트 방식</button>
+            <button class="tab" onclick="switchTab('setup')">설정 가이드</button>
+        </div>
+
+        <!-- API 방식 탭 -->
+        <div id="api-content" class="tab-content active">
+            <h3>📊 Google Sheets API 방식</h3>
+            <div class="input-group">
+                <label for="sheetId">구글 시트 ID:</label>
+                <input type="text" id="sheetId" placeholder="예: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms">
+            </div>
+            <div class="input-group">
+                <label for="range">데이터 범위:</label>
+                <input type="text" id="range" value="Sheet1!A1:Z1000" placeholder="예: Sheet1!A1:E10">
+            </div>
+            <div class="input-group">
+                <label for="apiKey">API 키:</label>
+                <input type="password" id="apiKey" placeholder="Google Cloud Console에서 생성한 API 키">
+            </div>
+            <button class="button" onclick="loadSheetData()">📥 데이터 불러오기</button>
+            <button class="button secondary" onclick="loadExampleData()">🎯 예시 데이터</button>
+        </div>
+
+        <!-- 앱스크립트 방식 탭 -->
+        <div id="script-content" class="tab-content">
+            <h3>⚡ Google Apps Script 방식</h3>
+            <div class="input-group">
+                <label for="scriptUrl">앱스크립트 웹앱 URL:</label>
+                <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+            </div>
+            <div class="input-group">
+                <label for="action">작업:</label>
+                <select id="action" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px;">
+                    <option value="read">데이터 읽기</option>
+                    <option value="write">데이터 쓰기</option>
+                    <option value="append">데이터 추가</option>
+                </select>
+            </div>
+            <div class="input-group" id="writeDataGroup" style="display: none;">
+                <label for="writeData">추가할 데이터 (JSON 형식):</label>
+                <textarea id="writeData" rows="4" placeholder='{"name": "홍길동", "age": 25, "city": "서울"}'></textarea>
+            </div>
+            <button class="button" onclick="executeScript()">⚡ 실행</button>
+            <button class="button secondary" onclick="showScriptCode()">📝 앱스크립트 코드 보기</button>
+        </div>
+
+        <!-- 설정 가이드 탭 -->
+        <div id="setup-content" class="tab-content">
+            <h3>🛠️ 설정 가이드</h3>
+            
+            <div class="instructions">
+                <h4>1️⃣ Google Sheets API 설정</h4>
+                <ol>
+                    <li>Google Cloud Console 접속</li>
+                    <li>새 프로젝트 생성 또는 기존 프로젝트 선택</li>
+                    <li>Google Sheets API 활성화</li>
+                    <li>사용자 인증 정보에서 API 키 생성</li>
+                    <li>구글 시트를 "링크가 있는 모든 사용자" 읽기 권한으로 공유</li>
+                </ol>
+            </div>
+
+            <div class="instructions">
+                <h4>2️⃣ Google Apps Script 설정</h4>
+                <ol>
+                    <li>script.google.com 접속</li>
+                    <li>새 프로젝트 생성</li>
+                    <li>아래 코드를 붙여넣기</li>
+                    <li>배포 → 새 배포 → 유형: 웹앱</li>
+                    <li>실행 권한: 나, 액세스 권한: 모든 사용자</li>
+                    <li>생성된 웹앱 URL 복사</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="dataDisplay">
+            <!-- 데이터가 여기에 표시됩니다 -->
+        </div>
+    </div>
+
+    <!-- 앱스크립트 코드 모달 -->
+    <div id="scriptModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="background: white; margin: 50px auto; padding: 30px; border-radius: 15px; max-width: 800px; max-height: 80vh; overflow-y: auto;">
+            <h3>📝 Google Apps Script 코드</h3>
+            <p>다음 코드를 Google Apps Script 에디터에 붙여넣으세요:</p>
+            <div class="code-block" id="scriptCodeContent"></div>
+            <button class="button" onclick="copyScriptCode()">📋 코드 복사</button>
+            <button class="button danger" onclick="closeScriptModal()">❌ 닫기</button>
+        </div>
     </div>
 
     <script>
-        console.log('페이지가 로드되었습니다!');
-        
-        // 간단한 인터랙션 추가
-        document.addEventListener('DOMContentLoaded', function() {
-            const button = document.querySelector('.button');
-            button.addEventListener('click', function() {
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 100);
+        console.log('구글 시트 & 앱스크립트 시스템이 로드되었습니다!');
+
+        // 탭 전환 함수
+        function switchTab(tabName) {
+            // 모든 탭과 컨텐츠 비활성화
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // 선택된 탭과 컨텐츠 활성화
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-content').classList.add('active');
+        }
+
+        // 작업 선택에 따른 UI 변경
+        document.getElementById('action').addEventListener('change', function() {
+            const writeDataGroup = document.getElementById('writeDataGroup');
+            if (this.value === 'write' || this.value === 'append') {
+                writeDataGroup.style.display = 'block';
+            } else {
+                writeDataGroup.style.display = 'none';
+            }
+        });
+
+        // API 방식으로 구글 시트 데이터 불러오기
+        async function loadSheetData() {
+            const sheetId = document.getElementById('sheetId').value.trim();
+            const range = document.getElementById('range').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const dataDisplay = document.getElementById('dataDisplay');
+            
+            if (!sheetId || !range || !apiKey) {
+                dataDisplay.innerHTML = '<div class="error">모든 필드를 입력해주세요.</div>';
+                return;
+            }
+            
+            dataDisplay.innerHTML = '<div class="loading">📥 데이터를 불러오는 중...</div>';
+            
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.values || data.values.length === 0) {
+                    dataDisplay.innerHTML = '<div class="error">데이터가 없습니다.</div>';
+                    return;
+                }
+                
+                displayData(data.values, 'API를 통해 불러온 데이터');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                dataDisplay.innerHTML = `<div class="error">❌ 오류가 발생했습니다: ${error.message}<br><br>
+                    확인사항:<br>
+                    • API 키가 올바른지<br>
+                    • 시트 ID가 올바른지<br>
+                    • 시트가 공개로 설정되어 있는지<br>
+                    • Google Sheets API가 활성화되어 있는지</div>`;
+            }
+        }
+
+        // 앱스크립트 실행
+        async function executeScript() {
+            const scriptUrl = document.getElementById('scriptUrl').value.trim();
+            const action = document.getElementById('action').value;
+            const writeData = document.getElementById('writeData').value.trim();
+            const dataDisplay = document.getElementById('dataDisplay');
+            
+            if (!scriptUrl) {
+                dataDisplay.innerHTML = '<div class="error">앱스크립트 URL을 입력해주세요.</div>';
+                return;
+            }
+            
+            dataDisplay.innerHTML = '<div class="loading">⚡ 앱스크립트 실행 중...</div>';
+            
+            try {
+                let url = `${scriptUrl}?action=${action}`;
+                let options = { method: 'GET' };
+                
+                if (action === 'write' || action === 'append') {
+                    if (!writeData) {
+                        dataDisplay.innerHTML = '<div class="error">추가할 데이터를 입력해주세요.</div>';
+                        return;
+                    }
+                    
+                    options = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ action: action, data: JSON.parse(writeData) })
+                    };
+                }
+                
+                const response = await fetch(url, options);
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (action === 'read') {
+                        displayData(result.data, '앱스크립트로 불러온 데이터');
+                    } else {
+                        dataDisplay.innerHTML = `<div class="success">✅ ${action} 작업이 성공적으로 완료되었습니다!</div>`;
+                    }
+                } else {
+                    dataDisplay.innerHTML = `<div class="error">❌ 오류: ${result.error}</div>`;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                dataDisplay.innerHTML = `<div class="error">❌ 앱스크립트 실행 중 오류가 발생했습니다: ${error.message}</div>`;
+            }
+        }
+
+        // 데이터를 테이블로 표시
+        function displayData(values, title) {
+            const dataDisplay = document.getElementById('dataDisplay');
+            
+            let tableHTML = `<h2>📊 ${title}</h2><table>`;
+            
+            values.forEach((row, index) => {
+                tableHTML += '<tr>';
+                row.forEach(cell => {
+                    const tag = index === 0 ? 'th' : 'td';
+                    tableHTML += `<${tag}>${cell || ''}</${tag}>`;
+                });
+                tableHTML += '</tr>';
             });
+            
+            tableHTML += '</table>';
+            tableHTML += `<p style="margin-top: 15px; color: #666;">📈 총 ${values.length}행의 데이터</p>`;
+            
+            dataDisplay.innerHTML = tableHTML;
+        }
+
+        // 예시 데이터 표시
+        function loadExampleData() {
+            const exampleData = [
+                ['이름', '나이', '직업', '도시', '급여'],
+                ['김철수', '25', '개발자', '서울', '5000'],
+                ['이영희', '30', '디자이너', '부산', '4500'],
+                ['박민수', '28', '기획자', '대구', '4000'],
+                ['정수진', '32', '마케터', '인천', '4800'],
+                ['최영수', '27', '개발자', '서울', '5200']
+            ];
+            
+            displayData(exampleData, '예시 데이터');
+        }
+
+        // 앱스크립트 코드 표시
+        function showScriptCode() {
+            const scriptCode = `function doGet(e) {
+  const action = e.parameter.action || 'read';
+  const spreadsheetId = 'YOUR_SPREADSHEET_ID'; // 여기에 실제 시트 ID 입력
+  const sheetName = 'Sheet1'; // 시트 이름
+  
+  try {
+    const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(sheetName);
+    
+    switch(action) {
+      case 'read':
+        return readData(sheet);
+      default:
+        return ContentService
+          .createTextOutput(JSON.stringify({success: false, error: 'Invalid action'}))
+          .setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e) {
+  const spreadsheetId = 'YOUR_SPREADSHEET_ID'; // 여기에 실제 시트 ID 입력
+  const sheetName = 'Sheet1'; // 시트 이름
+  
+  try {
+    const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(sheetName);
+    const postData = JSON.parse(e.postData.contents);
+    const action = postData.action;
+    const data = postData.data;
+    
+    switch(action) {
+      case 'write':
+        return writeData(sheet, data);
+      case 'append':
+        return appendData(sheet, data);
+      default:
+        return ContentService
+          .createTextOutput(JSON.stringify({success: false, error: 'Invalid action'}))
+          .setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function readData(sheet) {
+  const data = sheet.getDataRange().getValues();
+  return ContentService
+    .createTextOutput(JSON.stringify({success: true, data: data}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function writeData(sheet, data) {
+  // 기존 데이터 삭제 후 새 데이터 추가
+  sheet.clear();
+  const values = Object.keys(data).map(key => [key, data[key]]);
+  sheet.getRange(1, 1, values.length, 2).setValues(values);
+  
+  return ContentService
+    .createTextOutput(JSON.stringify({success: true, message: 'Data written successfully'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function appendData(sheet, data) {
+  // 마지막 행에 새 데이터 추가
+  const values = Object.keys(data).map(key => data[key]);
+  sheet.appendRow(values);
+  
+  return ContentService
+    .createTextOutput(JSON.stringify({success: true, message: 'Data appended successfully'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// 추가 유틸리티 함수들
+function getSheetInfo() {
+  const spreadsheetId = 'YOUR_SPREADSHEET_ID';
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  const sheets = spreadsheet.getSheets();
+  
+  const info = {
+    spreadsheetName: spreadsheet.getName(),
+    sheets: sheets.map(sheet => ({
+      name: sheet.getName(),
+      rows: sheet.getLastRow(),
+      columns: sheet.getLastColumn()
+    }))
+  };
+  
+  return ContentService
+    .createTextOutput(JSON.stringify({success: true, info: info}))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+
+            document.getElementById('scriptCodeContent').textContent = scriptCode;
+            document.getElementById('scriptModal').style.display = 'block';
+        }
+
+        // 앱스크립트 코드 복사
+        function copyScriptCode() {
+            const codeContent = document.getElementById('scriptCodeContent').textContent;
+            navigator.clipboard.writeText(codeContent).then(() => {
+                alert('📋 코드가 클립보드에 복사되었습니다!');
+            });
+        }
+
+        // 모달 닫기
+        function closeScriptModal() {
+            document.getElementById('scriptModal').style.display = 'none';
+        }
+
+        // 엔터 키 이벤트
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                const activeTab = document.querySelector('.tab.active').textContent;
+                if (activeTab === 'API 방식') {
+                    loadSheetData();
+                } else if (activeTab === '앱스크립트 방식') {
+                    executeScript();
+                }
+            }
+        });
+
+        // 모달 외부 클릭시 닫기
+        document.getElementById('scriptModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeScriptModal();
+            }
         });
     </script>
 </body>

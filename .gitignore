@@ -1,0 +1,34 @@
+# 민감한 정보 파일들
+.env
+.env.local
+.env.production
+
+# API 키 및 설정 파일
+config/secrets.json
+config/api-keys.txt
+
+# 로그 파일
+logs/
+*.log
+
+# 임시 파일
+temp/
+tmp/
+*.tmp
+
+# 운영체제 관련
+.DS_Store
+Thumbs.db
+
+# 에디터 설정
+.vscode/settings.json
+.idea/
+
+# 백업 파일
+backup/
+*.backup
+*.bak
+
+# 캐시 파일
+.cache/
+node_modules/
