@@ -1,0 +1,17 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": "./",
+  "installCommand": "echo 'No install needed'",
+  "devCommand": "npx http-server -p 3000",
+  "env": {
+    "GOOGLE_API_KEY": {
+      "description": "Google Sheets API 키",
+      "required": true
+    },
+    "GOOGLE_SHEET_ID": {
+      "description": "구글 시트 ID",
+      "required": true
+    }
+  }
+}

@@ -165,28 +165,24 @@
 <body>
     <div class="container">
         <h1>🚀 구글 시트 & 앱스크립트 데이터 시스템</h1>
-        <p class="subtitle">구글 시트 데이터를 다양한 방법으로 읽고 쓸 수 있습니다</p>
+        <p class="subtitle">Vercel 환경변수를 통한 안전한 구글 시트 데이터 관리</p>
         
         <div class="method-tabs">
-            <button class="tab active" onclick="switchTab('api')">API 방식</button>
+            <button class="tab active" onclick="switchTab('api')">Vercel API 방식</button>
             <button class="tab" onclick="switchTab('script')">앱스크립트 방식</button>
             <button class="tab" onclick="switchTab('setup')">설정 가이드</button>
         </div>
 
         <!-- API 방식 탭 -->
         <div id="api-content" class="tab-content active">
-            <h3>📊 Google Sheets API 방식</h3>
+            <h3>📊 Vercel API 방식 (환경변수 자동 설정)</h3>
             <div class="input-group">
-                <label for="sheetId">구글 시트 ID:</label>
-                <input type="text" id="sheetId" placeholder="예: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms">
-            </div>
-            <div class="input-group">
-                <label for="range">데이터 범위:</label>
+                <label for="range">📋 데이터 범위:</label>
                 <input type="text" id="range" value="Sheet1!A1:Z1000" placeholder="예: Sheet1!A1:E10">
             </div>
-            <div class="input-group">
-                <label for="apiKey">API 키:</label>
-                <input type="password" id="apiKey" placeholder="Google Cloud Console에서 생성한 API 키">
+            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #28a745;">
+                <h4 style="margin: 0 0 8px 0; color: #155724;">🔐 환경변수 자동 설정</h4>
+                <p style="margin: 0; color: #155724; font-size: 14px;">API 키와 시트 ID는 Vercel 환경변수에서 자동으로 가져옵니다.</p>
             </div>
             <button class="button" onclick="loadSheetData()">📥 데이터 불러오기</button>
             <button class="button secondary" onclick="loadExampleData()">🎯 예시 데이터</button>
@@ -220,18 +216,20 @@
             <h3>🛠️ 설정 가이드</h3>
             
             <div class="instructions">
-                <h4>1️⃣ Google Sheets API 설정</h4>
+                <h4>1️⃣ Vercel 환경변수 설정</h4>
                 <ol>
-                    <li>Google Cloud Console 접속</li>
-                    <li>새 프로젝트 생성 또는 기존 프로젝트 선택</li>
-                    <li>Google Sheets API 활성화</li>
-                    <li>사용자 인증 정보에서 API 키 생성</li>
+                    <li>Google Cloud Console에서 Google Sheets API 키 발급</li>
                     <li>구글 시트를 "링크가 있는 모든 사용자" 읽기 권한으로 공유</li>
+                    <li>구글 시트 URL에서 시트 ID 추출</li>
+                    <li>Vercel 대시보드 → 프로젝트 → Settings → Environment Variables</li>
+                    <li><code>GOOGLE_API_KEY</code>: 발급받은 API 키 입력</li>
+                    <li><code>GOOGLE_SHEET_ID</code>: 추출한 시트 ID 입력</li>
+                    <li>Production, Preview, Development 모든 환경에 설정</li>
                 </ol>
             </div>
 
             <div class="instructions">
-                <h4>2️⃣ Google Apps Script 설정</h4>
+                <h4>2️⃣ Google Apps Script 설정 (선택사항)</h4>
                 <ol>
                     <li>script.google.com 접속</li>
                     <li>새 프로젝트 생성</li>
@@ -240,6 +238,14 @@
                     <li>실행 권한: 나, 액세스 권한: 모든 사용자</li>
                     <li>생성된 웹앱 URL 복사</li>
                 </ol>
+            </div>
+
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                <h4 style="margin: 0 0 8px 0; color: #856404;">💡 구글 시트 ID 찾는 방법</h4>
+                <p style="margin: 0; color: #856404; font-size: 14px;">
+                    구글 시트 URL: <code>https://docs.google.com/spreadsheets/d/[SHEET_ID]/edit</code><br>
+                    <code>[SHEET_ID]</code> 부분이 필요한 시트 ID입니다.
+                </p>
             </div>
         </div>
 
@@ -283,45 +289,71 @@
             }
         });
 
-        // API 방식으로 구글 시트 데이터 불러오기
+        // API 방식으로 구글 시트 데이터 불러오기 (Vercel 환경변수 사용)
         async function loadSheetData() {
-            const sheetId = document.getElementById('sheetId').value.trim();
-            const range = document.getElementById('range').value.trim();
-            const apiKey = document.getElementById('apiKey').value.trim();
+            const range = document.getElementById('range').value.trim() || 'Sheet1!A1:Z1000';
             const dataDisplay = document.getElementById('dataDisplay');
-            
-            if (!sheetId || !range || !apiKey) {
-                dataDisplay.innerHTML = '<div class="error">모든 필드를 입력해주세요.</div>';
-                return;
-            }
             
             dataDisplay.innerHTML = '<div class="loading">📥 데이터를 불러오는 중...</div>';
             
             try {
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-                const response = await fetch(url);
-                
+                // Vercel API 엔드포인트 호출 (환경변수에서 API 키와 시트 ID 자동 가져옴)
+                const response = await fetch(`/api/sheets?range=${encodeURIComponent(range)}`);
+                const result = await response.json();
+
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(result.error || `HTTP ${response.status}`);
                 }
+
+                if (!result.success) {
+                    throw new Error(result.error || '알 수 없는 오류가 발생했습니다.');
+                }
+
+                const data = result.data;
                 
-                const data = await response.json();
-                
-                if (!data.values || data.values.length === 0) {
-                    dataDisplay.innerHTML = '<div class="error">데이터가 없습니다.</div>';
+                if (!data || data.length === 0) {
+                    dataDisplay.innerHTML = '<div class="error">📋 데이터가 없습니다.</div>';
                     return;
                 }
                 
-                displayData(data.values, 'API를 통해 불러온 데이터');
+                displayData(data, 'Vercel API를 통해 불러온 데이터');
+                
+                // 성공 메시지 표시
+                setTimeout(() => {
+                    const successDiv = document.createElement('div');
+                    successDiv.className = 'success';
+                    successDiv.innerHTML = `
+                        ✅ 데이터가 성공적으로 로드되었습니다! 
+                        (${new Date(result.timestamp).toLocaleString()})
+                    `;
+                    dataDisplay.insertBefore(successDiv, dataDisplay.firstChild);
+                    
+                    // 3초 후 성공 메시지 제거
+                    setTimeout(() => {
+                        if (successDiv.parentNode) {
+                            successDiv.parentNode.removeChild(successDiv);
+                        }
+                    }, 3000);
+                }, 100);
                 
             } catch (error) {
                 console.error('Error:', error);
-                dataDisplay.innerHTML = `<div class="error">❌ 오류가 발생했습니다: ${error.message}<br><br>
-                    확인사항:<br>
-                    • API 키가 올바른지<br>
-                    • 시트 ID가 올바른지<br>
-                    • 시트가 공개로 설정되어 있는지<br>
-                    • Google Sheets API가 활성화되어 있는지</div>`;
+                dataDisplay.innerHTML = `
+                    <div class="error">
+                        ❌ 데이터 로드 실패: ${error.message}
+                        <br><br>
+                        <details>
+                            <summary>문제 해결 방법</summary>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Vercel 환경변수에 GOOGLE_API_KEY가 올바르게 설정되었는지 확인</li>
+                                <li>Vercel 환경변수에 GOOGLE_SHEET_ID가 올바르게 설정되었는지 확인</li>
+                                <li>Google Sheets가 공개되어 있는지 확인</li>
+                                <li>API 키에 Google Sheets API 권한이 있는지 확인</li>
+                                <li>데이터 범위가 올바른지 확인 (예: Sheet1!A1:Z1000)</li>
+                            </ul>
+                        </details>
+                    </div>
+                `;
             }
         }
 

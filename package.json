@@ -6,7 +6,9 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "serve": "npx http-server -p 8080",
-    "preview": "start index.html"
+    "preview": "start index.html",
+    "vercel-dev": "vercel dev",
+    "deploy": "vercel --prod"
   },
   "keywords": [
     "google-sheets",
