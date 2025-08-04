@@ -178,11 +178,12 @@
             <h3>📊 Vercel API 방식 (환경변수 자동 설정)</h3>
             <div class="input-group">
                 <label for="range">📋 데이터 범위:</label>
-                <input type="text" id="range" value="Sheet1!A1:Z1000" placeholder="예: Sheet1!A1:E10">
+                <input type="text" id="range" value="data!A1:Z1000" placeholder="예: data!A1:E10">
             </div>
             <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #28a745;">
                 <h4 style="margin: 0 0 8px 0; color: #155724;">🔐 환경변수 자동 설정</h4>
                 <p style="margin: 0; color: #155724; font-size: 14px;">API 키와 시트 ID는 Vercel 환경변수에서 자동으로 가져옵니다.</p>
+                <p style="margin: 5px 0 0 0; color: #155724; font-size: 12px; font-style: italic;">📋 현재 설정: "data" 시트에서 데이터를 읽어옵니다.</p>
             </div>
             <button class="button" onclick="loadSheetData()">📥 데이터 불러오기</button>
             <button class="button secondary" onclick="loadExampleData()">🎯 예시 데이터</button>
@@ -291,7 +292,7 @@
 
         // API 방식으로 구글 시트 데이터 불러오기 (Vercel 환경변수 사용)
         async function loadSheetData() {
-            const range = document.getElementById('range').value.trim() || 'Sheet1!A1:Z1000';
+            const range = document.getElementById('range').value.trim() || 'data!A1:Z1000';
             const dataDisplay = document.getElementById('dataDisplay');
             
             dataDisplay.innerHTML = '<div class="loading">📥 데이터를 불러오는 중...</div>';
@@ -349,7 +350,7 @@
                                 <li>Vercel 환경변수에 GOOGLE_SHEET_ID가 올바르게 설정되었는지 확인</li>
                                 <li>Google Sheets가 공개되어 있는지 확인</li>
                                 <li>API 키에 Google Sheets API 권한이 있는지 확인</li>
-                                <li>데이터 범위가 올바른지 확인 (예: Sheet1!A1:Z1000)</li>
+                                <li>데이터 범위가 올바른지 확인 (예: data!A1:Z1000)</li>
                             </ul>
                         </details>
                     </div>
@@ -449,7 +450,7 @@
             const scriptCode = `function doGet(e) {
   const action = e.parameter.action || 'read';
   const spreadsheetId = 'YOUR_SPREADSHEET_ID'; // 여기에 실제 시트 ID 입력
-  const sheetName = 'Sheet1'; // 시트 이름
+  const sheetName = 'data'; // 데이터가 있는 시트 이름
   
   try {
     const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(sheetName);
@@ -471,7 +472,7 @@
 
 function doPost(e) {
   const spreadsheetId = 'YOUR_SPREADSHEET_ID'; // 여기에 실제 시트 ID 입력
-  const sheetName = 'Sheet1'; // 시트 이름
+  const sheetName = 'data'; // 데이터가 있는 시트 이름
   
   try {
     const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(sheetName);

@@ -23,8 +23,8 @@ export default async function handler(req, res) {
       });
     }
     
-    // 쿼리 파라미터에서 범위 가져오기 (기본값: Sheet1!A1:Z1000)
-    const range = req.query.range || 'Sheet1!A1:Z1000';
+    // 쿼리 파라미터에서 범위 가져오기 (기본값: data!A1:Z1000)
+    const range = req.query.range || 'data!A1:Z1000';
     
     // Google Sheets API 호출
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
